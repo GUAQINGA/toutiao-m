@@ -1,6 +1,12 @@
 <template>
   <div class="login-container">
-    <van-nav-bar class="page-nav-bar" title="登录" />
+    <van-nav-bar
+      class="page-nav-bar"
+      title="登录"
+      left-text="返回"
+      left-arrow
+      @click-left="$router.back()"
+    />
     <van-form ref="loginForm" @submit="onSubmit">
       <van-field
         v-model="user.mobile"
@@ -100,7 +106,7 @@ export default {
         const { data } = await login(user)
         this.$toast.success('登录成功！')
         this.$store.commit('setUser', data.data)
-        console.log(data)
+        this.$router.back()
       } catch (error) {
         console.log(error)
         console.log(error.response)
