@@ -24,3 +24,10 @@ export const getUserInfo = (params) => {
     // }
   })
 }
+
+export const getUserChannels = () => {
+  return request({
+    method: 'GET',
+    url: '/v1_0/user/channels'
+  })
+}
