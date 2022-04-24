@@ -3,8 +3,14 @@
     <van-cell-group class="my-channel-item">
       <van-cell :border="false">
         <div class="title" slot="title">我的频道</div>
-        <van-button class="edit-btn" type="danger" plain size="mini" round
-          >编辑</van-button
+        <van-button
+          class="edit-btn"
+          type="danger"
+          plain
+          size="mini"
+          round
+          @click="onEdit"
+          >{{ isEdit ? '完成' : '编辑' }}</van-button
         >
       </van-cell>
       <van-grid class="my-channel-grid" :gutter="10">
@@ -12,8 +18,13 @@
           class="grid-item"
           v-for="(channel, index) in myChannel"
           :key="index"
-          icon="close"
+          @click="onMyChannelClick(channel, index)"
         >
+          <van-icon
+            slot="icon"
+            name="close"
+            v-show="isEdit && !isFixed.includes(channel.id)"
+          />
           <span
             slot="text"
             class="text"
@@ -34,6 +45,7 @@
           :key="index"
           icon="plus"
           :text="channel.name"
+          @click="onAddChannel(channel)"
         />
       </van-grid>
     </van-cell-group>
@@ -41,7 +53,13 @@
 </template>
 
 <script>
-import { getAllChannels } from '@/api/channel'
+import {
+  getAllChannels,
+  addUserChannel,
+  deleteUserChannel
+} from '@/api/channel'
+import { mapState } from 'vuex'
+import { setItem } from '@/utils/storage'
 
 export default {
   name: 'ChannelEdit',
@@ -57,10 +75,13 @@ export default {
   },
   data () {
     return {
-      allChannels: []
+      allChannels: [],
+      isEdit: false,
+      isFixed: [0]
     }
   },
   computed: {
+    ...mapState(['user']),
     recommendChannels () {
       // const channels = []
       // this.allChannels.forEach((channel) => {
@@ -80,9 +101,6 @@ export default {
       })
     }
   },
-  created () {
-    this.loadAllChannels()
-  },
   methods: {
     async loadAllChannels () {
       try {
@@ -92,7 +110,57 @@ export default {
       } catch (error) {
         this.$toast('频道获取失败')
       }
+    },
+    async onAddChannel (channel) {
+      console.log(channel)
+      this.myChannel.push(channel)
+      if (this.user) {
+        try {
+          await addUserChannel({
+            id: channel.id,
+            seq: this.myChannel.length
+          })
+        } catch (error) {
+          this.$toast('添加失败，请稍后再试')
+        }
+      } else {
+        setItem('TOUTIAO_CHANNEL', this.myChannel)
+      }
+    },
+    onEdit () {
+      this.isEdit = !this.isEdit
+    },
+    onMyChannelClick (channel, index) {
+      if (this.isEdit) {
+        if (this.isFixed.includes(channel.id)) return
+
+        this.myChannel.splice(index, 1)
+
+        if (index <= this.active) {
+          this.$emit('update-active', this.active - 1, true)
+        }
+
+        this.deleteChannel(channel)
+        console.log('111')
+      } else {
+        this.$emit('update-active', index, false)
+      }
+    },
+    async deleteChannel (channel) {
+      try {
+        if (this.user) {
+          console.log('222')
+          await deleteUserChannel(channel.id)
+        } else {
+          setItem('TOUTIAO_CHANNEL', this.myChannel)
+        }
+      } catch (error) {
+        this.$toast('操作失败，请稍后再试')
+      }
     }
+  },
+  created () {
+    this.loadAllChannels()
   }
 }
 </script>
@@ -126,13 +194,15 @@ export default {
 
         .van-grid-item__content {
           background-color: #f4f5f6;
-
-          .van-grid-item__icon {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: 30px;
-            z-index: 2;
+          .van-grid-item__icon-wrapper {
+            position: unset;
+            .van-icon-close {
+              position: absolute;
+              top: -10px;
+              right: -10px;
+              font-size: 30px;
+              z-index: 2;
+            }
           }
 
           .text {

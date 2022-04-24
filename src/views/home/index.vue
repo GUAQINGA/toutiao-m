@@ -8,6 +8,7 @@
         type="info"
         size="small"
         icon="search"
+        to="/search"
         round
         >搜索</van-button
       >
@@ -39,6 +40,7 @@
       <channel-edit
         :my-channel="channelList"
         :active="active"
+        @update-active="onUpdateActive"
       ></channel-edit>
     </van-popup>
   </div>
@@ -46,6 +48,8 @@
 
 <script>
 import { getUserChannels } from '@/api/user'
+import { mapState } from 'vuex'
+import { getItem } from '@/utils/storage'
 import ArticleList from '@/components/article-list'
 import ChannelEdit from '@/components/channel-edit'
 
@@ -58,6 +62,9 @@ export default {
       isChannelShow: false
     }
   },
+  computed: {
+    ...mapState(['user'])
+  },
   created () {
     this.loadChannels()
   },
@@ -68,11 +75,30 @@ export default {
   methods: {
     async loadChannels () {
       try {
-        const { data } = await getUserChannels()
-        this.channelList = data.data.channels
+        let channels = []
+        let loadChannels = []
+        if (this.user) {
+          const { data } = await getUserChannels()
+          channels = data.data.channels
+        } else {
+          loadChannels = getItem('TOUTIAO_CHANNEL')
+          if (loadChannels) {
+            channels = loadChannels
+          } else {
+            const { data } = await getUserChannels()
+            channels = data.data.channels
+          }
+        }
+        this.channelList = channels
+        console.log(this.channelList)
       } catch (error) {
         this.$toast('获取频道数据失败！')
       }
+    },
+    onUpdateActive (index, isChannelShow = true) {
+      console.log(index)
+      this.active = index
+      this.isChannelShow = isChannelShow
     }
   }
 }
