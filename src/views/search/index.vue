@@ -42,16 +42,26 @@
 import SearchHistory from '@/components/search-history'
 import SearchSuggestion from '@/components/search-suggestion'
 import SearchResult from '@/components/search-result'
-// import { setItem, getItem } from '@/utils/storage'
+import { setItem, getItem } from '@/utils/storage'
 
 export default {
   name: 'SearchIndex',
+  components: {
+    SearchHistory,
+    SearchSuggestion,
+    SearchResult
+  },
   data () {
     return {
       searchValue: '',
       isResultShow: false,
-      // searchHistory: getItem('TOUTIAO_SEARCH_HISTORY') || []
-      searchHistory: []
+      searchHistory: getItem('TOUTIAO_SEARCH_HISTORY') || []
+      // searchHistory: []
+    }
+  },
+  watch: {
+    searchHistory (val) {
+      setItem('TOUTIAO_SEARCH_HISTORY', val)
     }
   },
   methods: {
@@ -71,18 +81,6 @@ export default {
     onCancel () {
       this.$router.back()
     }
-  },
-  watch: {
-    searchHistory (val) {
-      // setItem('TOUTIAO_SEARCH_HISTORY', val)
-    }
-  },
-  components: {
-    SearchHistory,
-    SearchSuggestion,
-    SearchResult
-    // setItem,
-    // getItem
   }
 }
 </script>
