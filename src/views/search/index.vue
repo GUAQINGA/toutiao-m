@@ -56,7 +56,6 @@ export default {
       searchValue: '',
       isResultShow: false,
       searchHistory: getItem('TOUTIAO_SEARCH_HISTORY') || []
-      // searchHistory: []
     }
   },
   watch: {
