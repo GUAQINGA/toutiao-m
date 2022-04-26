@@ -34,7 +34,7 @@ export default {
   props: {
     channel: {
       type: Object,
-      require: true
+      required: true
     }
   },
   data () {
@@ -60,9 +60,11 @@ export default {
           channel_id: this.channel.id,
           timestamp: this.timestamp || Date.now()
         })
-        if (Math.random() > 0.6) {
-          JSON.parse('ajflskjs')
-        }
+
+        // if (Math.random() > 0.8) {
+        //   JSON.parse('ajflskjs')
+        // }
+
         const { results } = data.data
         this.list.push(...results)
         this.loading = false

@@ -66,7 +66,7 @@ export default {
   props: {
     myChannel: {
       type: Array,
-      require: true
+      required: true
     },
     active: {
       type: Number,

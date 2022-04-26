@@ -7,3 +7,10 @@ export const getArticles = (params) => {
     params
   })
 }
+
+export const getArticlesById = (params) => {
+  return request({
+    method: 'GET',
+    url: `/v1_0/articles/${params}`
+  })
+}

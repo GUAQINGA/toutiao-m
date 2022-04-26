@@ -28,7 +28,13 @@
     ></search-suggestion>
 
     <!-- 搜索历史 -->
-    <search-history v-else></search-history>
+    <search-history
+      v-else
+      :search-history="searchHistory"
+      :search-value="searchValue"
+      @update-search-history="searchHistory = []"
+      @search="onSearch"
+    ></search-history>
   </div>
 </template>
 
@@ -36,6 +42,7 @@
 import SearchHistory from '@/components/search-history'
 import SearchSuggestion from '@/components/search-suggestion'
 import SearchResult from '@/components/search-result'
+// import { setItem, getItem } from '@/utils/storage'
 
 export default {
   name: 'SearchIndex',
@@ -43,18 +50,20 @@ export default {
     return {
       searchValue: '',
       isResultShow: false,
-      searchHistories: []
+      // searchHistory: getItem('TOUTIAO_SEARCH_HISTORY') || []
+      searchHistory: []
     }
   },
   methods: {
     onSearch (val) {
+      console.log(val)
       this.searchValue = val
       // 添加搜索历史
-      const index = this.searchHistories.indexOf(val)
+      const index = this.searchHistory.indexOf(val)
       if (index !== -1) {
-        this.searchHistories.splice(index, 1)
+        this.searchHistory.splice(index, 1)
       }
-      this.searchHistories.unshift(val)
+      this.searchHistory.unshift(val)
 
       // 渲染搜索结果
       this.isResultShow = true
@@ -63,10 +72,17 @@ export default {
       this.$router.back()
     }
   },
+  watch: {
+    searchHistory (val) {
+      // setItem('TOUTIAO_SEARCH_HISTORY', val)
+    }
+  },
   components: {
     SearchHistory,
     SearchSuggestion,
     SearchResult
+    // setItem,
+    // getItem
   }
 }
 </script>

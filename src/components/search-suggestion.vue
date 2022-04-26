@@ -22,7 +22,7 @@ export default {
   props: {
     searchValue: {
       type: String,
-      require: true
+      required: true
     }
   },
   data () {
