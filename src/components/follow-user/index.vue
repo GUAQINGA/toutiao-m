@@ -1,7 +1,6 @@
 <template>
   <van-button
     v-if="isFollowed"
-    class="follow-btn"
     round
     size="small"
     :loading="loading"
@@ -10,7 +9,6 @@
   >
   <van-button
     v-else
-    class="follow-btn"
     type="info"
     color="#3296fa"
     round
@@ -28,6 +26,10 @@ import { addFollow, deleteFollow } from '@/api/user'
 export default {
   name: 'FollowUser',
   components: {},
+  model: {
+    prop: 'isFollowed',
+    event: 'update-is-followed'
+  },
   props: {
     isFollowed: {
       type: Boolean,
