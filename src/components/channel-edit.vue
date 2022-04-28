@@ -106,13 +106,11 @@ export default {
       try {
         const { data } = await getAllChannels()
         this.allChannels = data.data.channels
-        console.log(data)
       } catch (error) {
         this.$toast('频道获取失败')
       }
     },
     async onAddChannel (channel) {
-      console.log(channel)
       this.myChannel.push(channel)
       if (this.user) {
         try {

@@ -51,6 +51,9 @@
         ></div>
         <van-divider>正文结束</van-divider>
 
+        <!-- 文章评论 -->
+        <comment-list :source="article.art_id"></comment-list>
+
         <!-- 底部区域 -->
         <div class="article-bottom">
           <van-button class="comment-btn" type="default" round size="small"
@@ -96,13 +99,15 @@ import { ImagePreview } from 'vant'
 import FollowUser from '@/components/follow-user'
 import CollectArticle from '@/components/collect-article'
 import LikeArticle from '@/components/like-article'
+import CommentList from '@/views/article/components/comment-list'
 
 export default {
   name: 'ArticleIndex',
   components: {
     FollowUser,
     CollectArticle,
-    LikeArticle
+    LikeArticle,
+    CommentList
   },
   props: {
     articleId: {
@@ -141,11 +146,9 @@ export default {
           this.previewImage()
         }, 0)
         this.loading = false
-        console.log(data)
       } catch (error) {
         this.loading = false
         this.errStatus = error.response.status
-        console.log('获取数据失败', error)
       }
     },
     previewImage () {
@@ -161,7 +164,6 @@ export default {
           })
         }
       })
-      console.log(imgUrl)
     }
   }
 }
