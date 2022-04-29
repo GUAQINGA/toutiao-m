@@ -5,6 +5,7 @@
     finished-text="没有更多了"
     :error.sync="error"
     error-text="加载失败，请点击重试"
+    immediate-check="false"
     @load="onLoad"
   >
     <comment-item
@@ -34,6 +35,13 @@ export default {
     list: {
       type: Array,
       default: () => []
+    },
+    type: {
+      type: String,
+      validator (value) {
+        return ['a', 'c'].includes(value)
+      },
+      default: 'a'
     }
   },
   data () {
@@ -51,7 +59,7 @@ export default {
     async onLoad () {
       try {
         const { data } = await getComment({
-          type: 'a',
+          type: this.type,
           source: this.source,
           offset: this.offset,
           limit: this.limit
@@ -79,6 +87,7 @@ export default {
     }
   },
   created () {
+    this.loading = true
     this.onLoad()
   },
   mounted () {}

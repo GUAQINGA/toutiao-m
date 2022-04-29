@@ -112,7 +112,11 @@
 
     <!-- 评论回复 -->
     <van-popup v-model="isReplyPopShow" position="bottom" style="height: 100%">
-      <comment-reply />
+      <comment-reply
+        v-show="isReplyPopShow"
+        :comment="commentCurrent"
+        @close="isReplyPopShow = false"
+      />
     </van-popup>
     <!-- 评论回复 -->
   </div>
@@ -153,7 +157,8 @@ export default {
       totalComment: 0,
       isCommentPopShow: false,
       commentList: [],
-      isReplyPopShow: false
+      isReplyPopShow: false,
+      commentCurrent: {}
     }
   },
   computed: {
@@ -203,6 +208,7 @@ export default {
       this.commentList.unshift(data.new_obj)
     },
     onReplyClick (comment) {
+      this.commentCurrent = comment
       this.isReplyPopShow = true
     }
   }
