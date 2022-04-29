@@ -52,14 +52,24 @@
         <van-divider>正文结束</van-divider>
 
         <!-- 文章评论 -->
-        <comment-list :source="article.art_id"></comment-list>
+        <comment-list
+          :source="article.art_id"
+          :list="commentList"
+          @onload-comment="totalComment = $event.total_count"
+          @reply-click="onReplyClick"
+        ></comment-list>
 
         <!-- 底部区域 -->
         <div class="article-bottom">
-          <van-button class="comment-btn" type="default" round size="small"
+          <van-button
+            class="comment-btn"
+            type="default"
+            round
+            size="small"
+            @click="isCommentPopShow = true"
             >写评论</van-button
           >
-          <van-icon name="comment-o" info="123" color="#777" />
+          <van-icon name="comment-o" :info="totalComment" color="#777" />
           <!-- <van-icon color="#777" name="star-o" /> -->
           <collect-article
             v-model="article.is_collected"
@@ -72,6 +82,15 @@
           <van-icon name="share" color="#777777"></van-icon>
         </div>
         <!-- /底部区域 -->
+
+        <!-- 发布评论弹窗 -->
+        <van-popup v-model="isCommentPopShow" position="bottom">
+          <comment-post
+            :target="article.art_id"
+            @add-comment-success="onAddCommentSuccess"
+          />
+        </van-popup>
+        <!-- 发布评论弹窗 -->
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -90,6 +109,12 @@
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
+
+    <!-- 评论回复 -->
+    <van-popup v-model="isReplyPopShow" position="bottom" style="height: 100%">
+      <comment-reply />
+    </van-popup>
+    <!-- 评论回复 -->
   </div>
 </template>
 
@@ -100,6 +125,8 @@ import FollowUser from '@/components/follow-user'
 import CollectArticle from '@/components/collect-article'
 import LikeArticle from '@/components/like-article'
 import CommentList from '@/views/article/components/comment-list'
+import CommentPost from '@/views/article/components/comment-post'
+import CommentReply from '@/views/article/components/comment-reply'
 
 export default {
   name: 'ArticleIndex',
@@ -107,7 +134,9 @@ export default {
     FollowUser,
     CollectArticle,
     LikeArticle,
-    CommentList
+    CommentList,
+    CommentPost,
+    CommentReply
   },
   props: {
     articleId: {
@@ -120,7 +149,11 @@ export default {
     return {
       article: {},
       loading: true,
-      errStatus: 0
+      errStatus: 0,
+      totalComment: 0,
+      isCommentPopShow: false,
+      commentList: [],
+      isReplyPopShow: false
     }
   },
   computed: {
@@ -164,6 +197,13 @@ export default {
           })
         }
       })
+    },
+    onAddCommentSuccess (data) {
+      this.isCommentPopShow = false
+      this.commentList.unshift(data.new_obj)
+    },
+    onReplyClick (comment) {
+      this.isReplyPopShow = true
     }
   }
 }
