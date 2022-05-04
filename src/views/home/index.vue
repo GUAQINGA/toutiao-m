@@ -90,7 +90,6 @@ export default {
           }
         }
         this.channelList = channels
-        console.log(this.channelList)
       } catch (error) {
         this.$toast('获取频道数据失败！')
       }

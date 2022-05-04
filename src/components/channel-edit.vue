@@ -139,7 +139,6 @@ export default {
         }
 
         this.deleteChannel(channel)
-        console.log('111')
       } else {
         this.$emit('update-active', index, false)
       }
@@ -147,7 +146,6 @@ export default {
     async deleteChannel (channel) {
       try {
         if (this.user) {
-          console.log('222')
           await deleteUserChannel(channel.id)
         } else {
           setItem('TOUTIAO_CHANNEL', this.myChannel)

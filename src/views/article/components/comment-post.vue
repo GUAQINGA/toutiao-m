@@ -10,8 +10,12 @@
       placeholder="请输入留言"
       show-word-limit
     />
-    <van-button class="post-btn" @click="onAddComment"
-    :disabled="!message.length">发布</van-button>
+    <van-button
+      class="post-btn"
+      @click="onAddComment"
+      :disabled="!message.length"
+      >发布</van-button
+    >
   </div>
 </template>
 
@@ -21,6 +25,12 @@ import { addComment } from '@/api/comment'
 export default {
   name: 'CommentPost',
   components: {},
+  inject: {
+    articleId: {
+      type: [Number, String, Object],
+      default: null
+    }
+  },
   props: {
     target: {
       type: [Number, String, Object],
@@ -47,12 +57,11 @@ export default {
         const { data } = await addComment({
           target: this.target,
           content: this.message,
-          art_id: null
+          art_id: this.articleId
         })
         this.message = ''
         this.$emit('add-comment-success', data.data)
         this.$toast.success('发布成功')
-        console.log(data)
       } catch (error) {
         this.$toast('发布失败，请重试')
         console.log(error)

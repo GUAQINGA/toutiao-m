@@ -30,7 +30,6 @@ import ArticleItem from '@/components/article-item'
 
 export default {
   name: 'ArticleList',
-
   props: {
     channel: {
       type: Object,
@@ -87,7 +86,6 @@ export default {
           timestamp: Date.now()
         })
         const { results } = data.data
-        console.log(results.length)
         this.list.unshift(...results)
         this.refreshing = false
         this.refreshSuccessText = `刷新成功，更新了${results.length}条文章`

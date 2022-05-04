@@ -3,34 +3,29 @@
     <div v-if="user" class="header user-info">
       <div class="base-info">
         <div class="left">
-          <van-image
-            class="avatar"
-            round
-            fit="cover"
-            :src="userInfo.photo"
-          />
+          <van-image class="avatar" round fit="cover" :src="userInfo.photo" />
           <span class="name">{{ userInfo.name }}</span>
         </div>
 
         <div class="right">
-          <van-button size="mini" round>编辑资料</van-button>
+          <van-button size="mini" round to="user/profile">编辑资料</van-button>
         </div>
       </div>
       <div class="data-status">
         <div class="data-item">
-          <span class="count">{{userInfo.art_count}}</span>
+          <span class="count">{{ userInfo.art_count }}</span>
           <span class="text">头条</span>
         </div>
         <div class="data-item">
-          <span class="count">{{userInfo.follow_count}}</span>
+          <span class="count">{{ userInfo.follow_count }}</span>
           <span class="text">关注</span>
         </div>
         <div class="data-item">
-          <span class="count">{{userInfo.fans_count}}</span>
+          <span class="count">{{ userInfo.fans_count }}</span>
           <span class="text">粉丝</span>
         </div>
         <div class="data-item">
-          <span class="count">{{userInfo.like_count}}</span>
+          <span class="count">{{ userInfo.like_count }}</span>
           <span class="text">获赞</span>
         </div>
       </div>

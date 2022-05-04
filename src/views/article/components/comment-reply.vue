@@ -12,23 +12,46 @@
       <comment-item :comment="comment" />
 
       <van-cell title="全部回复" />
-      <comment-list :source="comment.com_id" type="c"></comment-list>
+      <comment-list
+        :source="comment.com_id"
+        type="c"
+        :list="commentList"
+      ></comment-list>
     </div>
     <div class="add-btn-wrap">
-      <van-button class="add-comment-btn" size="small" round>写评论</van-button>
+      <van-button
+        class="add-comment-btn"
+        size="small"
+        round
+        @click="isReplyPopShow = true"
+        >写评论</van-button
+      >
     </div>
+    <!-- 滚动区域 -->
+
+    <!-- 评论回复 -->
+    <van-popup v-model="isReplyPopShow" position="bottom">
+      <comment-post
+        :target="comment.com_id"
+        :art-id="comment.art_id"
+        @add-comment-success="onAddCommentSuccess"
+      ></comment-post>
+    </van-popup>
+    <!-- 评论回复 -->
   </div>
 </template>
 
 <script>
 import CommentItem from '@/views/article/components/comment-item'
 import CommentList from '@/views/article/components/comment-list'
+import CommentPost from '@/views/article/components/comment-post'
 
 export default {
   name: 'CommentReply',
   components: {
     CommentItem,
-    CommentList
+    CommentList,
+    CommentPost
   },
   props: {
     comment: {
@@ -37,11 +60,20 @@ export default {
     }
   },
   data () {
-    return {}
+    return {
+      isReplyPopShow: false,
+      commentList: []
+    }
   },
   watch: {},
   computed: {},
-  methods: {},
+  methods: {
+    onAddCommentSuccess (data) {
+      this.isReplyPopShow = false
+      this.comment.reply_count++
+      this.commentList.unshift(data.new_obj)
+    }
+  },
   created () {},
   mounted () {}
 }

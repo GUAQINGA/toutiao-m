@@ -142,11 +142,15 @@ export default {
     CommentPost,
     CommentReply
   },
+  provide: function () {
+    return {
+      articleId: this.articleId
+    }
+  },
   props: {
     articleId: {
       type: [Number, String],
-      required: true,
-      followLoading: false
+      required: true
     }
   },
   data () {

@@ -5,7 +5,7 @@
     finished-text="没有更多了"
     :error.sync="error"
     error-text="加载失败，请点击重试"
-    immediate-check="false"
+    :immediate-check="false"
     @load="onLoad"
   >
     <comment-item
@@ -73,7 +73,6 @@ export default {
         this.list.push(...results)
 
         this.$emit('onload-comment', data.data)
-        console.log(data)
         this.loading = false
         if (results.length) {
           this.offset = data.data.last_id
